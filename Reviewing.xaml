@@ -1,0 +1,121 @@
+﻿<Window x:Class="Conferencia.Reviewing"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Conferencia"
+        mc:Ignorable="d"
+        Title="Reviewing" Height="450" Width="800">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка окна -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,20">
+            <StackPanel DockPanel.Dock="Left">
+                <TextBlock Text="Портал «Конференции.РФ»" 
+                           FontSize="14" Foreground="#6C757D"/>
+                <TextBlock Text="Мои заявки на бронирование" 
+                           FontSize="24" FontWeight="Bold" Foreground="#212529"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Width="193" Height="37">
+                <Button Content="+ Новая заявка" 
+                        Click="NewRequestButton_Click"
+                        Padding="16,10" Margin="0,0,10,0"
+                        Background="#0D6EFD" Foreground="White" 
+                        FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"/>
+                <Button Content="Выйти" 
+                        Click="LogoutButton_Click"
+                        Padding="14,10"
+                        Background="#E9ECEF" Foreground="#212529" 
+                        BorderThickness="0" Cursor="Hand"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Список заявок -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="RequestsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,14"
+                                BorderBrush="#DEE2E6" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Основная информация о заявке -->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding VenueName, StringFormat='Помещение: {0}'}" 
+                                                   FontSize="18" FontWeight="Bold" Foreground="#212529"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                            <TextBlock Text="{Binding EventDate, StringFormat='Дата проведения: {0:dd.MM.yyyy}'}" 
+                                                       Foreground="#495057" Margin="0,0,20,0"/>
+                                            <TextBlock Text="{Binding PaymentMethod, StringFormat='Оплата: {0}'}" 
+                                                       Foreground="#495057"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <!-- Статус заявки -->
+                                    <Border Grid.Column="1" VerticalAlignment="Top" 
+                                            Background="#E7F1FF" CornerRadius="4" Padding="10,4">
+                                        <TextBlock Text="{Binding Status}" 
+                                                   FontWeight="SemiBold" Foreground="#0D6EFD"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Блок отзыва (виден только при статусе "Завершено") -->
+                                <Border Grid.Row="1" Margin="0,15,0,0" Padding="0,15,0,0"
+                                        BorderBrush="#E9ECEF" BorderThickness="0,1,0,0">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Завершено">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <StackPanel>
+                                        <TextBlock Text="Отзыв о качестве проведенного мероприятия:" 
+                                                   FontWeight="SemiBold" Foreground="#343A40" Margin="0,0,0,6"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBox Grid.Column="0" 
+                                                     Text="{Binding ReviewText, UpdateSourceTrigger=PropertyChanged}"
+                                                     Height="60" TextWrapping="Wrap" AcceptsReturn="True"
+                                                     Padding="8" BorderBrush="#CED4DA"/>
+
+                                            <Button Grid.Column="1" Content="Сохранить отзыв"
+                                                    Tag="{Binding}"
+                                                    Click="SaveReviewButton_Click"
+                                                    VerticalAlignment="Bottom" Margin="10,0,0,0"
+                                                    Padding="14,8" Background="#198754" Foreground="White"
+                                                    BorderThickness="0" Cursor="Hand"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>
